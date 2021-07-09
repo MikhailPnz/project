@@ -1,0 +1,42 @@
+"coord": {
+"lon": 46.0712,
+"lat": 53.7189
+},
+"weather": [
+{
+"id": 800,
+"main": "Clear",
+"description": "clear sky",
+"icon": "01d"
+}
+],
+"base": "stations",
+"main": {
+"temp": 295.07,
+"feels_like": 294.57,
+"temp_min": 295.07,
+"temp_max": 295.07,
+"pressure": 1016,
+"humidity": 48,
+"sea_level": 1016,
+"grnd_level": 990
+},
+"visibility": 10000,
+"wind": {
+"speed": 6.82,
+"deg": 55,
+"gust": 8.87
+},
+"clouds": {
+"all": 0
+},
+"dt": 1625559584,
+"sys": {
+"country": "RU",
+"sunrise": 1625531639,
+"sunset": 1625592394
+},
+"timezone": 10800,
+"id": 521776,
+"name": "Nikol'sk",
+"cod": 200
