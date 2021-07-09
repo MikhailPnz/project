@@ -4,6 +4,8 @@ import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import ru.burenkov.weatherBroker.service.ClientService;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -33,4 +35,18 @@ public class mqSender {
         template.convertAndSend(fanout.getName(), "", message);
         System.out.println(" [x] Sent '" + message + "'");
     }
+/*
+    public void sendMQ(String message) {
+        /*StringBuilder builder = new StringBuilder("Hello");
+        if (dots.getAndIncrement() == 3) {
+            dots.set(1);
+        }
+        for (int i = 0; i < dots.get(); i++) {
+            builder.append('.');
+        }
+        builder.append(count.incrementAndGet());
+        String message = builder.toString();
+        template.convertAndSend(fanout.getName(), "", message);
+        System.out.println(" [x] Sent '" + message + "'");
+    } */
 }

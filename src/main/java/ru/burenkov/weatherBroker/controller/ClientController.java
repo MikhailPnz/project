@@ -1,5 +1,6 @@
 package ru.burenkov.weatherBroker.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,9 @@ public class ClientController {
 
     @PostMapping ("/weather")
     @ResponseBody
-    public ResponseEntity<?>greeting(@RequestParam String city) {
+    public ResponseEntity<?>greeting(@RequestParam String city) throws JsonProcessingException {
         clientService.request(city);
-        return new ResponseEntity<>("ID: " + city, HttpStatus.OK);
+        return new ResponseEntity<>("City: " + city, HttpStatus.OK);
     }
 
     @PostMapping(value = "/clients")

@@ -1,5 +1,6 @@
 package ru.burenkov.weatherBroker.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import ru.burenkov.weatherBroker.model.Client;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface ClientService {
      */
     void create(Client client);
 
-    void request(String city);
+    void request(String city) throws JsonProcessingException;
 
     /*
      * Возвращает список всех имеющихся клиентов

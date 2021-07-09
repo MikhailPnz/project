@@ -1,12 +1,15 @@
 package ru.burenkov.weatherBroker.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.burenkov.weatherBroker.model.Client;
+import ru.burenkov.weatherBroker.mq.mqSender;
 import ru.burenkov.weatherBroker.req.City;
+import ru.burenkov.weatherBroker.req.Weather;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,10 +35,13 @@ public class ClientServiceImpl implements ClientService {
         CLIENT_REPOSITORY_MAP.put(clientId, client);
     }
 
-    public void request(String city) {
+    public void request(String city) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         City page = restTemplate.getForObject("http://api.openweathermap.org/data/2.5/weather?q=" +city+ "&appid=28faf092d43ea66bbf585993c042bbe2", City.class);
-        log.info(page.toString());
+        //log.info(page.toString());
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(page);
+        log.info(json);
     }
 
     @Override
