@@ -1,13 +1,12 @@
 package ru.burenkov.weatherBroker.mq;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-import ru.burenkov.weatherBroker.service.ClientService;
-
-import java.util.concurrent.atomic.AtomicInteger;
+import org.springframework.web.client.RestTemplate;
+import ru.burenkov.weatherBroker.req.City;
 
 public class mqSender {
 
@@ -17,36 +16,14 @@ public class mqSender {
     @Autowired
     private FanoutExchange fanout; //разветвление
 
-    AtomicInteger dots = new AtomicInteger(0);
-
-    AtomicInteger count = new AtomicInteger(0);
-
-    @Scheduled(fixedDelay = 1000, initialDelay = 500)
-    public void send() {
-        StringBuilder builder = new StringBuilder("Hello");
-        if (dots.getAndIncrement() == 3) {
-            dots.set(1);
-        }
-        for (int i = 0; i < dots.get(); i++) {
-            builder.append('.');
-        }
-        builder.append(count.incrementAndGet());
-        String message = builder.toString();
-        template.convertAndSend(fanout.getName(), "", message);
-        System.out.println(" [x] Sent '" + message + "'");
+    //@Scheduled(fixedDelay = 1000, initialDelay = 500)
+    public void send(String city) throws JsonProcessingException {
+        RestTemplate restTemplate = new RestTemplate();
+        City page = restTemplate.getForObject("http://api.openweathermap.org/data/2.5/weather?q=" +city+ "&appid=28faf092d43ea66bbf585993c042bbe2", City.class);
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(page);
+        template.convertAndSend(fanout.getName(), "", json);
+        System.out.println(" [x] Sent '" + json + "'");
     }
-/*
-    public void sendMQ(String message) {
-        /*StringBuilder builder = new StringBuilder("Hello");
-        if (dots.getAndIncrement() == 3) {
-            dots.set(1);
-        }
-        for (int i = 0; i < dots.get(); i++) {
-            builder.append('.');
-        }
-        builder.append(count.incrementAndGet());
-        String message = builder.toString();
-        template.convertAndSend(fanout.getName(), "", message);
-        System.out.println(" [x] Sent '" + message + "'");
-    } */
+
 }

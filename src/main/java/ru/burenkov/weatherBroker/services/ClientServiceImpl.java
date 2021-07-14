@@ -1,4 +1,4 @@
-package ru.burenkov.weatherBroker.service;
+package ru.burenkov.weatherBroker.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,9 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.burenkov.weatherBroker.model.Client;
-import ru.burenkov.weatherBroker.mq.mqSender;
 import ru.burenkov.weatherBroker.req.City;
-import ru.burenkov.weatherBroker.req.Weather;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +39,7 @@ public class ClientServiceImpl implements ClientService {
         //log.info(page.toString());
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(page);
+        //mqServices.send(json);
         log.info(json);
     }
 

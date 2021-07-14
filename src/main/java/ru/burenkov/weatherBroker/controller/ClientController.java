@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.burenkov.weatherBroker.model.Client;
-import ru.burenkov.weatherBroker.service.ClientService;
+import ru.burenkov.weatherBroker.mq.mqReceiver;
+import ru.burenkov.weatherBroker.mq.mqSender;
+import ru.burenkov.weatherBroker.services.ClientService;
 
 import java.util.List;
 
@@ -20,10 +22,13 @@ public class ClientController {
         this.clientService = clientService;
     }
 
+    @Autowired
+    private mqSender mqSender;
+
     @PostMapping ("/weather")
     @ResponseBody
     public ResponseEntity<?>greeting(@RequestParam String city) throws JsonProcessingException {
-        clientService.request(city);
+        mqSender.send(city);
         return new ResponseEntity<>("City: " + city, HttpStatus.OK);
     }
 

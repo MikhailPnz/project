@@ -1,4 +1,4 @@
-package ru.burenkov.weatherBroker.service;
+package ru.burenkov.weatherBroker.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import ru.burenkov.weatherBroker.model.Client;
