@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import ru.burenkov.weatherBroker.dto.WeatherDto;
 import ru.burenkov.weatherBroker.entities.WeatherEntity;
 import ru.burenkov.weatherBroker.req.City;
@@ -25,18 +26,12 @@ public class mqReceiver {
     private MappingUtils mappingUtils;
 
     @RabbitListener(queues = "#{autoDeleteQueue1.name}")
+    //@Transactional(rollbackFor = )
     public void receive(String in) throws InterruptedException, JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         City person = mapper.readValue(in, City.class);
         WeatherDto dto = mappingUtils.CityMapToWeatherDto(person);
-        List<WeatherEntity> weather = new ArrayList<>(
-                Arrays.asList(
-                        new WeatherEntity()
-                                .setName(dto.getName())
-                                .setTemp(dto.getTemp())
-                ));
-        weatherService.saveAll(weather);
-
+        weatherService.saveAllToBD(dto);
         System.out.println(" [x] Received '" + dto.toString() + "'");
 
     }

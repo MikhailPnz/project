@@ -2,11 +2,14 @@ package ru.burenkov.weatherBroker.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.burenkov.weatherBroker.dto.WeatherDto;
 import ru.burenkov.weatherBroker.entities.WeatherEntity;
 import ru.burenkov.weatherBroker.repositories.WeatherRepositories;
 import ru.burenkov.weatherBroker.utils.MappingUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +22,17 @@ public class WeatherService {
 
     public void saveAll(List<WeatherEntity> weatherEntities) {
         weatherRepositories.saveAll(weatherEntities);
+    }
+
+    @Transactional
+    public void saveAllToBD(WeatherDto dto) {
+        List<WeatherEntity> weather = new ArrayList<>(
+                Arrays.asList(
+                        new WeatherEntity()
+                                .setName(dto.getName())
+                                .setTemp(dto.getTemp())
+                ));
+        saveAll(weather);
     }
 
     //для листа продуктов мы использовали стрим
