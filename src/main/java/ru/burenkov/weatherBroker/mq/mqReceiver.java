@@ -2,44 +2,43 @@ package ru.burenkov.weatherBroker.mq;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.util.StopWatch;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.burenkov.weatherBroker.dto.WeatherDto;
+import ru.burenkov.weatherBroker.entities.WeatherEntity;
 import ru.burenkov.weatherBroker.req.City;
-import ru.burenkov.weatherBroker.req.Main;
+import ru.burenkov.weatherBroker.services.WeatherService;
+import ru.burenkov.weatherBroker.utils.MappingUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+//@RequiredArgsConstructor
 public class mqReceiver {
+
+    @Autowired
+    private WeatherService weatherService;
+
+    @Autowired
+    private MappingUtils mappingUtils;
 
     @RabbitListener(queues = "#{autoDeleteQueue1.name}")
     public void receive(String in) throws InterruptedException, JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        WeatherDto person = mapper.readValue(in, WeatherDto.class);
-        System.out.println(" [x] Received '" + person + "'");
+        City person = mapper.readValue(in, City.class);
+        WeatherDto dto = mappingUtils.CityMapToWeatherDto(person);
+        List<WeatherEntity> weather = new ArrayList<>(
+                Arrays.asList(
+                        new WeatherEntity()
+                                .setName(dto.getName())
+                                .setTemp(dto.getTemp())
+                ));
+        weatherService.saveAll(weather);
+
+        System.out.println(" [x] Received '" + dto.toString() + "'");
+
     }
-/*
-    @RabbitListener(queues = "#{autoDeleteQueue2.name}")
-    public void receive2(String in) throws InterruptedException {
-        receive(in, 2);
-    }*/
-/*
-    public void receive(String in) throws InterruptedException, JsonProcessingException {
-        //StopWatch watch = new StopWatch();
-        //watch.start();
-        ObjectMapper mapper = new ObjectMapper();
-        //City person = mapper.readValue(in, City.class);
-        WeatherDto person = mapper.readValue(in, WeatherDto.class);
-        System.out.println(" [x] Received '" + person + "'");
-        //doWork(in);
-        //watch.stop();
-        //System.out.println("instance " + receiver + " [x] Done in " + watch.getTotalTimeSeconds() + "s");
-    }*/
-/*
-    private void doWork(String in) throws InterruptedException {
-        for (char ch : in.toCharArray()) {
-            if (ch == '.') {
-                Thread.sleep(1000);
-            }
-        }
-    }*/
+
 }

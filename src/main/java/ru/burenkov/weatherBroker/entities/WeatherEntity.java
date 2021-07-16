@@ -25,4 +25,13 @@ public class WeatherEntity {
 
     @Column
     Double temp;
+
+    @Override
+    public String toString() {
+        return "City{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", temp=" + temp +
+                '}';
+    }
 }

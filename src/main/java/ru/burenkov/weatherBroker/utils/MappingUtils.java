@@ -8,6 +8,7 @@ import ru.burenkov.weatherBroker.req.Main;
 
 @Service
 public class MappingUtils {
+
     //из entity в dto
     public WeatherDto mapToWeatherDto(WeatherEntity entity){
         WeatherDto dto = new WeatherDto();
@@ -23,5 +24,12 @@ public class MappingUtils {
         entity.setName(dto.getName());
         entity.setTemp(dto.getTemp());
         return entity;
+    }
+    //из city в dto
+    public WeatherDto CityMapToWeatherDto(City city){
+        WeatherDto dto = new WeatherDto();
+        dto.setName(city.getName());
+        dto.setTemp(city.getMain().getTemp());
+        return dto;
     }
 }

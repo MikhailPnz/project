@@ -13,7 +13,8 @@ public class WeatherDto {
     @Override
     public String toString() {
         return "City{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", temp=" + temp +
                 '}';
     }
