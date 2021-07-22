@@ -73,7 +73,6 @@
 			<artifactId>spring-boot-starter-data-jdbc</artifactId>
 		</dependency>
 
-
 	</dependencies>
 
 	<build>
@@ -91,6 +90,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>docker-spring-boot</finalName>
 	</build>
 
 </project>
