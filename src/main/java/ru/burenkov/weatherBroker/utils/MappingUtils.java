@@ -2,8 +2,8 @@ package ru.burenkov.weatherBroker.utils;
 
 import org.springframework.stereotype.Component;
 import ru.burenkov.weatherBroker.dto.WeatherDto;
-import ru.burenkov.weatherBroker.entities.WeatherEntity;
-import ru.burenkov.weatherBroker.req.City;
+import ru.burenkov.weatherBroker.entity.WeatherEntity;
+import ru.burenkov.weatherBroker.dto.req.City;
 
 @Component
 public class MappingUtils {

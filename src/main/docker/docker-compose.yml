@@ -1,0 +1,70 @@
+version: '3.3'
+
+#networks:
+#  app-tier:
+#    driver: bridge
+
+services:
+  app:
+    #image: 'springio/gs-spring-boot-docker'
+    build: .
+    container_name: weatherBrocker
+    ports:
+      - 8081:8081
+    #networks:
+    #  - app-tier
+    #environment:
+      #- SPRING_DATASOURCE_URL=jdbc:postgresql://app-tier:5432/wb_db
+      #- RABBITMQ_VHOST=rabbitmq
+      #- RabbitMq/Host=rabbitmq
+      #- RMQ_HOST=${RABBITMQ_DEFAULT_HOST:-rabbitmq}
+      #- RMQ_PORT=${RABBITMQ_DEFAULT_PORT:-5672}
+      #- SPRING_DATASOURCE_USERNAME=postgres
+      #- SPRING_DATASOURCE_PASSWORD=root
+      #- SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - db
+      - rabbitmq
+    #restart: always
+    #links:
+    #  - db
+    #  - rabbit
+
+  db:
+    image: postgres
+    container_name: postgresWB
+    ports:
+      - 5432:5432
+    #networks:
+    #  - app-tier
+    volumes:
+      - ./pg_date:/var/lib/postgresql/date/pgdate
+    environment:
+      POSTGRES_PASSWORD: 'root'
+      POSTGRES_DB: wb_db
+      PGDATA: /var/lib/postgresql/data/pgdata
+    #restart: always
+
+  rabbitmq:
+    image: rabbitmq:3.6.14-management
+    container_name: rabbitmqWB
+    #networks:
+    #  - app-tier
+    #volumes:
+    #  - ./etc/rabbitmq/conf:/etc/rabbitmq/
+    #  - ./etc/rabbitmq/data/:/var/lib/rabbitmq/
+    #  - ./etc/rabbitmq/logs/:/var/log/rabbitmq/
+    #hostname: rabbitmq
+    #environment:
+      #AMQP_URL: 'amqp://rabbitmq?connection_attempts=5&retry_delay=5'
+      #RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE:-secret_cookie}
+      #RABBITMQ_DEFAULT_USER: "guest"
+      #RABBITMQ_DEFAULT_PASS: "guest"
+      #RABBITMQ_DEFAULT_VHOST: "/"
+      #RABBITMQ_DEFAULT_VHOST: rabbitmq-host
+    ports:
+      - 5672:5672
+      - 15672:15672
+    #restart: always
+
+

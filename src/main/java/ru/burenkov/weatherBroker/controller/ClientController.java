@@ -1,13 +1,18 @@
 package ru.burenkov.weatherBroker.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.burenkov.weatherBroker.entities.WeatherEntity;
+import ru.burenkov.weatherBroker.dto.Response;
+import ru.burenkov.weatherBroker.dto.WeatherDto;
+import ru.burenkov.weatherBroker.entity.WeatherEntity;
+import ru.burenkov.weatherBroker.exception.BusinessException;
 import ru.burenkov.weatherBroker.mq.MqSender;
-import ru.burenkov.weatherBroker.repositories.WeatherRepositories;
+import ru.burenkov.weatherBroker.repository.WeatherRepositories;
+import ru.burenkov.weatherBroker.service.WeatherService;
 
 import java.util.List;
 
@@ -15,36 +20,33 @@ import java.util.List;
 public class ClientController {
 
     private final WeatherRepositories weatherRepositories;
-    private final MqSender mqSender;
+    private final WeatherService weatherService;
 
     @Autowired
-    public ClientController(WeatherRepositories weatherRepositories, MqSender mqSender) {
+    public ClientController(WeatherRepositories weatherRepositories, WeatherService weatherService) {
         this.weatherRepositories = weatherRepositories;
-        this.mqSender = mqSender;
+        this.weatherService = weatherService;
     }
 
     @PostMapping ("/weather")
     @ResponseBody
     public ResponseEntity<?>weather(@RequestParam String city) throws JsonProcessingException {
-        mqSender.send(city); // это бизнес-логика убрать в сервис
+        weatherService.sendMqSender(city);
         return new ResponseEntity<>("City: " + city, HttpStatus.OK);
     }
-
-    @GetMapping("/filter")
+/*
+    @GetMapping("/weather")
     public ResponseEntity<?> filter(@RequestParam String city) {
         List<WeatherEntity> weatherEntities = weatherRepositories.findAllByName(city);
         return weatherEntities != null &&  !weatherEntities.isEmpty()
                 ? new ResponseEntity<>(weatherEntities, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND); // перенести в слой сервиса,
-                                                                // делать в сервисе проверку: если запись не найдена, то бросать своё кастомное исключение,
-                                                                // для обработки исключений можно написать свой @ControllerAdvice, который будет в @ExceptionHandler
-                                                                // отлавливать исключения и каким-то образом их обрабатывать и выдавать информацию пользовател
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }*/
+
+    @GetMapping(value = "/weather")
+    public ResponseEntity<?> filtertControllerAdvice(@RequestParam String city) throws BusinessException {
+        return new ResponseEntity<>(weatherService.response(city), HttpStatus.OK);
     }
 
-    @PostMapping ("/ok")
-    @ResponseBody
-    public ResponseEntity<?>weather() {
-        return new ResponseEntity<>("OK", HttpStatus.OK);
-    }
 
 }

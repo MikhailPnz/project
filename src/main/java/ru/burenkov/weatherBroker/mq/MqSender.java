@@ -7,7 +7,7 @@ import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
-import ru.burenkov.weatherBroker.req.City;
+import ru.burenkov.weatherBroker.dto.req.City;
 
 @Slf4j
 public class MqSender {
@@ -18,11 +18,7 @@ public class MqSender {
     @Autowired
     private FanoutExchange fanout; //разветвление
 
-    public void send(String city) throws JsonProcessingException {
-        RestTemplate restTemplate = new RestTemplate();
-        City page = restTemplate.getForObject("http://api.openweathermap.org/data/2.5/weather?q=" +city+ "&appid=28faf092d43ea66bbf585993c042bbe2", City.class);
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(page);
+    public void send(String json) {
         template.convertAndSend(fanout.getName(), "", json);
         log.info("[x] Sent: " + json);
     }
