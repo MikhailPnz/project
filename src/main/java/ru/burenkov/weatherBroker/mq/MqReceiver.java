@@ -18,7 +18,7 @@ public class MqReceiver {
     @Autowired
     private WeatherService weatherService;
 
-    @RabbitListener(queues = "#{autoDeleteQueue1.name}")
+    @RabbitListener(queues = "#{autoDeleteQueue.name}")
     public void receive(String in) throws JsonProcessingException {
         log.info("[x] Received: " + weatherService.receiverMqReceiver(in));
     }

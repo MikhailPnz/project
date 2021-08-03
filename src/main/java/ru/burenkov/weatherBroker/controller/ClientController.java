@@ -1,23 +1,19 @@
 package ru.burenkov.weatherBroker.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.hibernate.service.spi.ServiceException;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.burenkov.weatherBroker.dto.Response;
-import ru.burenkov.weatherBroker.dto.WeatherDto;
-import ru.burenkov.weatherBroker.entity.WeatherEntity;
 import ru.burenkov.weatherBroker.exception.BusinessException;
-import ru.burenkov.weatherBroker.mq.MqSender;
 import ru.burenkov.weatherBroker.repository.WeatherRepositories;
 import ru.burenkov.weatherBroker.service.WeatherService;
 
-import java.util.List;
-
 @RestController
 public class ClientController {
+
+    final static Logger logger = Logger.getLogger(ClientController.class);
 
     private final WeatherRepositories weatherRepositories;
     private final WeatherService weatherService;
@@ -32,6 +28,7 @@ public class ClientController {
     @ResponseBody
     public ResponseEntity<?>weather(@RequestParam String city) throws JsonProcessingException {
         weatherService.sendMqSender(city);
+        logger.info("POST запрос: " + city);
         return new ResponseEntity<>("City: " + city, HttpStatus.OK);
     }
 /*
