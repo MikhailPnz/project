@@ -11,7 +11,10 @@ import ru.burenkov.weatherBroker.dto.req.City;
 import ru.burenkov.weatherBroker.service.WeatherService;
 import ru.burenkov.weatherBroker.utils.MappingUtils;
 
-//@RequiredArgsConstructor // как-то надо его использовать
+/**
+ //@RequiredArgsConstructor // как-то надо его использовать
+ */
+
 @Slf4j
 public class MqReceiver {
 

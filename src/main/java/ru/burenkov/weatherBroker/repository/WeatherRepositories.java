@@ -10,5 +10,6 @@ import java.util.List;
 public interface WeatherRepositories extends JpaRepository<WeatherEntity,Integer> {
 
     List<WeatherEntity> findAllByName (String name);
+    WeatherEntity findByName (String name);
 
 }
